@@ -36,6 +36,5 @@ export const QuestionList: FC<Props> = ({data}) => (
         <Question data={question} />
       </li>
     ))}
-
   </ul>
 );
