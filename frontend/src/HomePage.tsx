@@ -1,7 +1,8 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { PrimaryButton } from './Styles';
-import React from 'react';
+import { QuestionList } from './QuestionList';
+import { getUnansweredQuestions } from './QuestionData';
 
 export const HomePage = () => (
   <div
@@ -31,5 +32,6 @@ export const HomePage = () => (
       </h2>
       <PrimaryButton>Ask a question</PrimaryButton>
     </div>
+    <QuestionList data={getUnansweredQuestions()} />
   </div>
 )

@@ -4,6 +4,7 @@ import { css, jsx } from '@emotion/core';
 import { gray5, accent2 } from './Styles';
 import { QuestionData } from './QuestionData';
 import React from 'react';
+import { Question } from './Question';
 
 interface Props {
   data: QuestionData[]
@@ -22,9 +23,9 @@ export const QuestionList: FC<Props> = ({data}) => (
     box-shadow: 0 3px 5px 0 rgba(0, 0, 0, 0.16);
   `}
   >
-    {data.map(({questionId}) => (
+    {data.map(question => (
       <li
-        key={questionId}
+        key={question.questionId}
         css={css`
           border-top: 1px solid ${gray5};
           :first-of-type {
@@ -32,7 +33,7 @@ export const QuestionList: FC<Props> = ({data}) => (
           }
         `}
       >
-
+        <Question data={question} />
       </li>
     ))}
 
