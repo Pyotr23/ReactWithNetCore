@@ -40,7 +40,8 @@ const questions: QuestionData[] = [
   {
     questionId: 2,
     title: 'Which state managment tool should I use?',
-    content: `Which one should I use?`,
+    content: `There seem to be a fair few state management tools around for
+      React - React, Unstated, ... Which one should I use?`,
     userName: 'Bob',
     created: new Date(),
     answers: []
