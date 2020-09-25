@@ -4,6 +4,7 @@ import { css, jsx } from '@emotion/core';
 import { QuestionData } from './QuestionData';
 import React from 'react';
 import { gray2, gray3 } from './Styles';
+import { Link } from 'react-router-dom';
 
 interface Props {
   data: QuestionData,
@@ -16,14 +17,15 @@ export const Question: FC<Props> = ({ data, showContent = true }) => (
     padding: 10px 0px;
     `}
   >
-    <div
+    <Link
       css={css`
-        padding: 10px 0px;
-        font-size: 19px;
+        text-decoration: none;
+        color: ${gray2};
       `}
+      to={`questions/${data.questionId}`}
     >
       {data.title}
-    </div>
+    </Link>
     {showContent && (
       <div
         css={css`
@@ -49,7 +51,3 @@ export const Question: FC<Props> = ({ data, showContent = true }) => (
     </div>
   </div>
 )
-
-// Question.defaultProps = {
-//   showContent: true
-// }

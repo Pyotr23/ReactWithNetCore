@@ -4,10 +4,12 @@ import { HomePage } from './HomePage';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { fontFamily, fontSize, gray2 } from './Styles';
-import { BrowserRouter, Route } from 'react-router-dom';
+import { BrowserRouter, Redirect, Route, Switch } from 'react-router-dom';
 import { SearchPage } from './SearchPage';
 import { AskPage } from './AskPage';
 import { SignInPage } from './SignInPage';
+import { NotFoundPage } from './NotFoundPage';
+import { QuestionPage } from './QuestionPage';
 
 const App: React.FC = () => {
   return (
@@ -19,10 +21,15 @@ const App: React.FC = () => {
           color: ${gray2};
         `}>
         <Header />
-        <Route exact path="/" component={HomePage} />
-        <Route path="/search" component={SearchPage} />
-        <Route path="/ask" component={AskPage} />
-        <Route path="/signin" component={SignInPage} />
+        <Switch>
+          <Redirect path="/home" to="/" />
+          <Route exact path="/" component={HomePage} />
+          <Route path="/search" component={SearchPage} />
+          <Route path="/ask" component={AskPage} />
+          <Route path="/signin" component={SignInPage} />
+          <Route path="/questions/:questionId" component={QuestionPage} />
+          <Route component={NotFoundPage} />
+        </Switch>
       </div>
     </BrowserRouter>
   );
