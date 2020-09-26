@@ -68,3 +68,11 @@ export const getQuestion = async (
     ? null
     : results[0];
 };
+
+export const searchQuestions = async (
+  criteria: string,
+): Promise<QuestionData[]> => {
+  await wait(500);
+  return questions.filter(q =>
+    q.title.toLowerCase().indexOf(criteria) >= 0 || q.content.toLowerCase().indexOf(criteria) >= 0);
+}
