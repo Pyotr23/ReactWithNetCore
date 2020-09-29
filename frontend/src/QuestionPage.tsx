@@ -6,6 +6,8 @@ import { css, jsx } from '@emotion/core';
 import { gray3, gray6 } from './Styles';
 import { getQuestion, QuestionData } from './QuestionData';
 import { AnswerList } from './AnswerList';
+import { Form } from './Form';
+import { Field } from './Field';
 
 interface RouteParams {
   questionId: string
@@ -68,6 +70,15 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
               ${question.created.toLocaleTimeString()}`}
             </div>
             <AnswerList data={question.answers} />
+            <div
+              css={css`
+                margin-top: 20px;
+              `}
+            >
+              <Form submitCaption="Submit Your Answear">
+                <Field name="content" label="Content" type="TextArea" />
+              </Form>
+            </div>
           </Fragment>
         )}
     </div>
