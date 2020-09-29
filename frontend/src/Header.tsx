@@ -46,7 +46,7 @@ export const Header: FC<RouteComponentProps> = ({ history, location }) => {
           type="text"
           placeholder="Search..."
           value = {search}
-          onInput={handleSearchInputChange}
+          onChange={handleSearchInputChange}
           css={css`
             box-sizing: border-box;
             font-family: ${fontFamily};

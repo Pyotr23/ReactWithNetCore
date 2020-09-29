@@ -37,17 +37,25 @@ const baseCSS = css`
 `;
 
 export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
-  const { setValue } = useContext(FormContext);
+  const { setValue, touched, setTouched, validate } = useContext(FormContext);
   const handleChange = (
     e: ChangeEvent<HTMLInputElement>
       | ChangeEvent<HTMLTextAreaElement>
   ) => {
     if (setValue)
       setValue(name, e.currentTarget.value);
+    if (touched[name] && validate)
+      validate(name);
+  };
+  const handleBlur = () => {
+    if (setTouched)
+      setTouched(name);
+    if (validate)
+      validate(name);
   }
   return (
     <FormContext.Consumer>
-      {({ values }) => (
+      {({ values, errors }) => (
         <div
           css={css`
             display: flex;
@@ -72,6 +80,7 @@ export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
                       : values[name]
                   }
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   id={name}
                   css={baseCSS}
                 />
@@ -80,6 +89,7 @@ export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
                 <textarea
                   id={name}
                   onChange={handleChange}
+                  onBlur={handleBlur}
                   value={
                     values[name] === undefined
                       ? ''
@@ -93,6 +103,19 @@ export const Field: FC<Props> = ({ name, label, type = 'Text' }) => {
               )}
             </label>
           )}
+          {errors[name] &&
+            errors[name].length > 0 &&
+            errors[name].map(error => (
+              <div
+                key={error}
+                css={css`
+                  font-size: 12px;
+                  color: red;
+                `}
+              >
+                {error}
+              </div>
+            ))}
         </div>
       )}
     </FormContext.Consumer>
