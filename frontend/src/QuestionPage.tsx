@@ -4,9 +4,9 @@ import { Page } from './Page';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { gray3, gray6 } from './Styles';
-import { getQuestion, QuestionData } from './QuestionData';
+import { getQuestion, postAnswer, QuestionData } from './QuestionData';
 import { AnswerList } from './AnswerList';
-import { Form, minLength, required } from './Form';
+import { Form, minLength, required, Values } from './Form';
 import { Field } from './Field';
 
 interface RouteParams {
@@ -27,6 +27,17 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
       doGetQuestion(questionId);
     }
   }, [match.params.questionId]);
+
+  const handleSubmit = async (values: Values) => {
+    const result = await postAnswer({
+      questionId: question!.questionId,
+      content: values.content,
+      userName: 'Fred',
+      created: new Date()
+    });
+    return { success: result ? true : false };
+  };
+
   return <Page>
       <div
         css={css`
@@ -77,6 +88,9 @@ export const QuestionPage: FC<RouteComponentProps<RouteParams>> = ({
             >
               <Form
                 submitCaption="Submit Your Answear"
+                onSubmit={handleSubmit}
+                failureMessage="There was a problem with your answer"
+                successMessage="Your answer was successfully submitted"
                 validationRules={
                     {
                       content: [

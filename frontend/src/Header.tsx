@@ -1,6 +1,6 @@
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
-import { ChangeEvent, FC, useState } from 'react';
+import { ChangeEvent, FC, FormEvent, useState } from 'react';
 import { Link, RouteComponentProps, withRouter } from 'react-router-dom';
 import { fontFamily, fontSize, gray1, gray2, gray5 } from './Styles';
 import { UserIcon } from './UserIcon';
@@ -13,6 +13,10 @@ export const Header: FC<RouteComponentProps> = ({ history, location }) => {
 
   const handleSearchInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearch(e.currentTarget.value);
+  };
+  const handleSearchSubmit = (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    history.push(`/search?criteria=${search}`);
   };
   return (
     <div
@@ -41,7 +45,7 @@ export const Header: FC<RouteComponentProps> = ({ history, location }) => {
       >
         Q & A
       </Link>
-      <form>
+      <form onSubmit={handleSearchSubmit}>
         <input
           type="text"
           placeholder="Search..."
