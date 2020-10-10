@@ -1,18 +1,18 @@
 import { getUnansweredQuestions, postQuestion, PostQuestionData, QuestionData } from "./QuestionData";
-import { Action, Dispatch, ActionCreator } from 'redux';
+import { Action, Dispatch, ActionCreator, Reducer, combineReducers } from 'redux';
 import { ThunkAction } from 'redux-thunk';
 
-interface QuestionState {
+interface QuestionsState {
   readonly loading: boolean;
   readonly unanswered: QuestionData[] | null;
   readonly postedResult?: QuestionData
 }
 
 export interface AppState {
-  readonly questions: QuestionState
+  readonly questions: QuestionsState
 }
 
-const initialQuestionState: QuestionState = {
+const initialQuestionState: QuestionsState = {
   loading: false,
   unanswered: null
 }
@@ -23,7 +23,7 @@ export interface GotUnansweredQuestionsAction extends Action<'GotUnansweredQuest
   questions: QuestionData[]
 }
 
-export interface PostedQuestionAction extends Action<'PostedAction'> {
+export interface PostedQuestionAction extends Action<'PostedQuestion'> {
   result: QuestionData | undefined
 }
 
@@ -46,11 +46,11 @@ export const getUnansweredQuestionsActionCreator: ActionCreator<
     };
     dispatch(gettingUnansweredQuestionsAction);
     const questions = await getUnansweredQuestions();
-    const gotUnansweredQuestionsAction: GotUnansweredQuestionsAction = {
+    const gotUnansweredQuestionAction: GotUnansweredQuestionsAction = {
       questions,
       type: 'GotUnansweredQuestions'
     };
-    dispatch(gotUnansweredQuestionsAction);
+    dispatch(gotUnansweredQuestionAction);
   }
 }
 
@@ -63,21 +63,59 @@ export const postQuestionActionCreator: ActionCreator<
   >
 > = (question: PostQuestionData) => {
   return async (dispatch: Dispatch) => {
-  const result = await postQuestion(question);
-  const postedQuestionAction: PostedQuestionAction = {
-    result,
-    type: 'PostedAction'
-  };
-  dispatch(postedQuestionAction);
+    const result = await postQuestion(question);
+    const postedQuestionAction: PostedQuestionAction = {
+      type: 'PostedQuestion',
+      result
+    };
+    dispatch(postedQuestionAction);
   };
 };
 
-export const clearPostedQuestionActionCreator: ActionCreator<
-  PostedQuestionAction
-  > = () => {
+export const clearPostedQuestionActionCreator: ActionCreator<PostedQuestionAction> = () => {
   const postedQuestionAction: PostedQuestionAction = {
-    type: 'PostedAction',
-    result: undefined,
+    type: 'PostedQuestion',
+    result: undefined
   };
   return postedQuestionAction;
 };
+
+const questionsReducer: Reducer<QuestionsState, QuestionsActions> = (
+  state = initialQuestionState,
+  action
+) => {
+  switch (action.type) {
+    case 'GettingUnansweredQuestions': {
+      return {
+        ...state,
+        unanswered: null,
+        loading: true
+      }
+    }
+    case 'GotUnansweredQuestions': {
+      return {
+        ...state,
+        unanswered: action.questions,
+        loading: false
+      }
+    }
+    case 'PostedQuestion': {
+      return {
+        ...state,
+        unanswered: action.result
+          ? (state.unanswered || []).concat(action.result)
+          : state.unanswered,
+        postedResult: action.result
+      }
+    }
+    default:
+      neverReached(action);
+  }
+  return state;
+};
+
+const neverReached = (never: never) => {};
+
+const rootReducer = combineReducers<AppState>({
+  questions: questionsReducer
+})
