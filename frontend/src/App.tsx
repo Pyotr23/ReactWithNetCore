@@ -1,6 +1,6 @@
 import React, { lazy, Suspense } from 'react';
 import { HeaderWithRouter as Header } from './Header';
-import { HomePage } from './HomePage';
+import HomePage from './HomePage';
 /** @jsx jsx */
 import { css, jsx } from '@emotion/core';
 import { fontFamily, fontSize, gray2 } from './Styles';
@@ -9,12 +9,17 @@ import { SearchPage } from './SearchPage';
 import { SignInPage } from './SignInPage';
 import { NotFoundPage } from './NotFoundPage';
 import { QuestionPage } from './QuestionPage';
+import { Provider } from 'react-redux';
+import { configureStore } from './Store';
+
+const store = configureStore();
 
 const AskPage = lazy(() => import('./AskPage'));
 
 const App: React.FC = () => {
   return (
-    <BrowserRouter>
+    <Provider store={store}>
+      <BrowserRouter>
       <div
         css={css `
           font-family: ${fontFamily};
@@ -47,6 +52,7 @@ const App: React.FC = () => {
         </Switch>
       </div>
     </BrowserRouter>
+    </Provider>
   );
 }
 
