@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using QandA.Models;
+using System.Collections.Generic;
 
 namespace QandA.Data
 {
