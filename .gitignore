@@ -104,3 +104,4 @@ dist
 .tern-port
 backend/QandA/obj/
 backend/QandA/.vs/
+backend/QandA/bin/
