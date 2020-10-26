@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using QandA.Data;
 using System.Reflection;
 
 namespace QandA
@@ -34,6 +35,7 @@ namespace QandA
                 upgrader.PerformUpgrade();
 
             services.AddControllers();
+            services.AddScoped<IDataRepository, DataRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
