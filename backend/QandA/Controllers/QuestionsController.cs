@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.SignalR;
 using QandA.Data;
+using QandA.Hubs;
 using QandA.Models;
 using System;
 using System.Collections.Generic;
@@ -11,10 +13,12 @@ namespace QandA.Controllers
     public class QuestionsController : ControllerBase
     {
         private readonly IDataRepository _dataRepository;
+        private readonly IHubContext<QuestionsHub> _questionHubContext;
 
-        public QuestionsController(IDataRepository dataRepository)
+        public QuestionsController(IDataRepository dataRepository, IHubContext<QuestionsHub> questionHubContext)
         {
             _dataRepository = dataRepository;
+            _questionHubContext = questionHubContext;
         }
 
         [HttpGet]
@@ -83,17 +87,24 @@ namespace QandA.Controllers
 
         [HttpPost("answer")]
         public ActionResult<AnswerGetResponse> PostAnswer(AnswerPostRequest answerPostRequest)
-        {            
-            if (!_dataRepository.QuestionExists(answerPostRequest.QuestionId.Value))
+        {
+            var questionId = answerPostRequest.QuestionId.Value;
+            if (!_dataRepository.QuestionExists(questionId))
                 return NotFound();
             var savedAnswer = _dataRepository.PostAnswer(new AnswerPostFullRequest 
             {
-                QuestionId = answerPostRequest.QuestionId.Value,
+                QuestionId = questionId,
                 Content = answerPostRequest.Content,
                 UserId = "1",
                 UserName = "bob.test@test.com",
                 Created = DateTime.UtcNow
             });
+
+            _questionHubContext
+                .Clients
+                .Group($"Question-{questionId}")
+                .SendAsync("ReceiveQuestion", _dataRepository.GetQuestion(questionId));
+
             return savedAnswer;
         }
     }

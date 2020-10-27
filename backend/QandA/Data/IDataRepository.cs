@@ -23,6 +23,6 @@ namespace QandA.Data
 
         void DeleteQuestion(int questionId);
 
-        AnswerGetResponse PostAnswer(AnswerPostRequest answer);
+        AnswerGetResponse PostAnswer(AnswerPostFullRequest answer);
     }
 }

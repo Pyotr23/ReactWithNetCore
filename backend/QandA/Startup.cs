@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using QandA.Data;
+using QandA.Hubs;
 using System.Reflection;
 
 namespace QandA
@@ -36,6 +37,7 @@ namespace QandA
 
             services.AddControllers();
             services.AddScoped<IDataRepository, DataRepository>();
+            services.AddSignalR();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -55,6 +57,7 @@ namespace QandA
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapControllers();
+                endpoints.MapHub<QuestionsHub>("/questionshub");
             });
         }
     }
