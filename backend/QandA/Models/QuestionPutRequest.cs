@@ -1,4 +1,6 @@
-﻿namespace QandA.Models
+﻿using System.ComponentModel.DataAnnotations;
+
+namespace QandA.Models
 {
     public class QuestionPutRequest
     {
